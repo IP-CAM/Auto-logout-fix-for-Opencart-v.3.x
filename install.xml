@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<modification>
+  <name>Auto Logout Fix for Opencart 3</name>
+  <version>1.0</version>
+  <code>auto-logout-fix-oc3</code>
+  <author>Elson Tan</author>
+  <link>elsontan.com</link>
+  <description>Fixes Opencart 3 auto log out problem after redirected back from other website, usually happens when returning request is POST </description>
+
+  <file path="catalog/controller/startup/session.php">
+    <operation>
+      <search><![CDATA[setcookie($this->config->get('session_name'), $this->session->getId(), ini_get('session.cookie_lifetime'), ini_get('session.cookie_path'), ini_get('session.cookie_domain'));]]></search>
+      <add position="replace"><![CDATA[setcookie($this->config->get('session_name'), $this->session->getId(), ['expires' => ini_get('session.cookie_lifetime'), 'path' => ini_get('session.cookie_path'), 'domain' => ini_get('session.cookie_domain'), 'samesite' => 'None', 'secure' => true, 'httponly' => true]);]]></add>
+    </operation>
+
+  </file>
+
+  <file path="system/framework.php">
+    <operation>
+      <search><![CDATA[setcookie($config->get('session_name'), $session->getId(), ini_get('session.cookie_lifetime'), ini_get('session.cookie_path'), ini_get('session.cookie_domain'));]]></search>
+      <add position="replace"><![CDATA[setcookie($this->config->get('session_name'), $this->session->getId(), ['expires' => ini_get('session.cookie_lifetime'), 'path' => ini_get('session.cookie_path'), 'domain' => ini_get('session.cookie_domain'), 'samesite' => 'None', 'secure' => true, 'httponly' => true]);]]></add>
+    </operation>
+
+  </file>
+</modification>
